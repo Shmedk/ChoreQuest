@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Dashboard | ChoreQuest</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function markDone(button) {
+            button.parentElement.classList.toggle("completed");
+            button.textContent = button.parentElement.classList.contains("completed")
+                ? "✅ Completed"
+                : "Mark as Done";
+        }
+    </script>
+</head>
+<body>
+<header>
+    <h1>🎯 Child Dashboard</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="parent.html">Parent</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <h2>Your Quests</h2>
+    <div class="quest-list">
+        <div class="quest-card">
+            <h3>🧺 Laundry Legend</h3>
+            <p>Fold and put away all clean clothes.</p>
+            <p><strong>Reward:</strong> 20 minutes screen time</p>
+            <button onclick="markDone(this)">Mark as Done</button>
+        </div>
+
+        <div class="quest-card">
+            <h3>🍽️ Dish Defender</h3>
+            <p>Wash all dishes after dinner.</p>
+            <p><strong>Reward:</strong> 1 gold star</p>
+            <button onclick="markDone(this)">Mark as Done</button>
+        </div>
+    </div>
+</main>
+</body>
+</html>

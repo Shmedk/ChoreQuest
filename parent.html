@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard | ChoreQuest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>🧹 Parent Dashboard</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="child.html">Child</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <h2>Add a New Quest</h2>
+    <form class="quest-form">
+        <input type="text" placeholder="Quest Title (e.g. Clean your room)" required>
+        <textarea placeholder="Description (what to do)"></textarea>
+        <input type="text" placeholder="Reward (e.g. 1 gold star)">
+        <button type="button">Add Quest</button>
+    </form>
+
+    <h2>Active Quests</h2>
+    <div class="quest-list">
+        <div class="quest-card">
+            <h3>🧺 Laundry Legend</h3>
+            <p>Fold and put away all clean clothes.</p>
+            <p><strong>Reward:</strong> 20 minutes screen time</p>
+            <button class="approve">Approve</button>
+        </div>
+
+        <div class="quest-card">
+            <h3>🍽️ Dish Defender</h3>
+            <p>Wash all dishes after dinner.</p>
+            <p><strong>Reward:</strong> 1 gold star</p>
+            <button class="approve">Approve</button>
+        </div>
+    </div>
+</main>
+</body>
+</html>
