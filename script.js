@@ -184,7 +184,7 @@ async function deleteQuest(id) {
     await api('deleteQuest.php', 'POST', {id});
     renderAll();
 }
-/*🥲🥲🥲🥲🥲😫😫😫stats😫😫😫🥲🥲🥲🥲🥲*/
+//🥲🥲🥲🥲🥲😫😫😫stats😫😫😫🥲🥲🥲🥲🥲
 function computeStats(quests) {
     const total = quests.length;
     const active = quests.filter(q => q.status === 'active').length;
@@ -231,7 +231,7 @@ function drawChart(stats) {
     });
 }
 
-// super agent still in the works
+// super agent still this ai will someday take over the world muah hah ha hah
 function aiSuggest() {
     const templates = [
         {title: 'Tidy the play area', desc: 'Pick up toys and put them in their boxes.', reward: '1 gold star'},
