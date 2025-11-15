@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Parent Dashboard | ChoreQuest</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="parent">
 <header>
     <h1>🧹 Parent Dashboard</h1>
     <nav>
@@ -17,7 +17,8 @@
 
 <main class="dashboard">
     <h2>Add a New Quest</h2>
-    <form class="quest-form">
+
+    <form class="quest-form" onsubmit="return false;">
         <label>
             <input type="text" placeholder="Quest Title (e.g. Clean your room)" required>
         </label>
@@ -28,24 +29,12 @@
             <input type="text" placeholder="Reward (e.g. 1 gold star)">
         </label>
         <button type="button">Add Quest</button>
+        <button id="aiSuggest" type="button">AI Suggest Quests</button>
     </form>
 
     <h2>Active Quests</h2>
-    <div class="quest-list">
-        <div class="quest-card">
-            <h3>🧺 Laundry Legend</h3>
-            <p>Fold and put away all clean clothes.</p>
-            <p><strong>Reward:</strong> 20 minutes screen time</p>
-            <button class="approve">Approve</button>
-        </div>
-
-        <div class="quest-card">
-            <h3>🍽️ Dish Defender</h3>
-            <p>Wash all dishes after dinner.</p>
-            <p><strong>Reward:</strong> 1 gold star</p>
-            <button class="approve">Approve</button>
-        </div>
-    </div>
+    <div class="quest-list"></div>
 </main>
+<script src="script.js"></script>
 </body>
 </html>
