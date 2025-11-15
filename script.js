@@ -1,41 +1,75 @@
 const API_BASE = './backend';
+// this is basically me being lazy. now i only type "backend" once instead of 23131435124523413513242134 times.
+// truly peak programmer efficiency right here.
 
-//helper i'm too lazy to rewrite it every time
+
+// tiny wrapper around fetch() so i don't lose my sanity , spoiler i still lost it
 async function api(path, method = 'GET', body = null) {
-    const opts = {method, headers: {}}; // options for fetch
-    if (body) {// if body true fill it
+    const opts = { method, headers: {} };
+    // this "opts" object tells fetch what to do
+    // fetch( url , options ) — this is the "options"
+
+    if (body) {
+        // if we have a body, we are POSTing something
+        // aka "sending data to the php goblin"
         opts.headers['Content-Type'] = 'application/json';
         opts.body = JSON.stringify(body);
+        // js → json → php receives it → does magic → returns json back
     }
-    const res = await fetch(`${API_BASE}/${path}`, opts); //response
-    return res.json();// returns the json
+
+    const res = await fetch(`${API_BASE}/${path}`, opts);
+    // sending request to: backend/someFile.php
+
+    return res.json();
+    // we always expect json back because it's cleaner than my room, not kidding
 }
 
+
+// fetches quests from backend AND double-checks it's an array because php likes chaos, or so i've read on stack overflow
 async function loadQuests() {
-    const data = await api('getQuests.php');// gets the current Quests
-    return Array.isArray(data) ? data : data.quests || []; // make sure they are an array and return them
+    const data = await api('getQuests.php');
+    // calling our api helper, grabbing whatever php returns
+
+    return Array.isArray(data) ? data : data.quests || [];
+    // defensive coding: if data isn't an array (bc php is "quirky"),
+    // we default to data.quests or empty array
 }
 
+
+// this function figures out which page we’re on and draws the right stuff
 async function renderAll() {
-    const page = document.body.dataset.page; // 'index' | 'parent' | 'child'
+    const page = document.body.dataset.page;
+    // inside each html file, you set <body data-page="parent"> etc.
+    // this tells JS "where the heck are we?", keeping it pg 13 you are welcome
+
     const quests = await loadQuests();
+    // pull fresh quests from backend
+
     if (page === 'parent') renderParent(quests);
     if (page === 'child') renderChild(quests);
     if (page === 'index') renderIndexStats(quests);
+
+    // stats appear everywhere because analytics are watching you, you reached this course i assume you passed "probabilities and statistics" sry for the ptsd
     renderStats(quests);
 }
 
+
+// shows stats under the home hero section (homepage only)
 function renderIndexStats(quests) {
     const stats = computeStats(quests);
+
     const container = document.querySelector('.hero .buttons') || document.body;
-    // We'll show a small summary underneath hero
+
     let el = document.getElementById('home-stats');
     if (!el) {
+        // oh no element missing? no problem. we summon it.
         el = document.createElement('div');
         el.id = 'home-stats';
         el.style.marginTop = '20px';
         container.parentNode.insertBefore(el, container.nextSibling);
     }
+
+    // shove stats into HTML
     el.innerHTML = `
     <strong>Quests total:</strong> ${stats.total} —
     <strong>Active:</strong> ${stats.active} —
@@ -44,22 +78,30 @@ function renderIndexStats(quests) {
   `;
 }
 
-function escapeHtml(str = '') { // replaces special chars with safe html things just stole this function cuz "safty " doesn't really matter
+// keeps our html safe from kids doing "<script>alert(1)</script>" tricks
+function escapeHtml(str = '') {
     if (!str) return '';
-    return str.replace(/[&<>"']/g, (m) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m]));
+    return str.replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[m]);
 }
 
 
+// formats timestamp into something we humans can read
 function formatTime(ts) {
     if (!ts) return '-';
-    const d = new Date(ts * 1000);
-    return d.toLocaleString();
+    const d = new Date(ts * 1000); // backend stores unix timestamps
+    return d.toLocaleString(); // browser magically makes it pretty
 }
 
-//Parent UI
+//parent ui
 function renderParent(quests) {
     const list = document.querySelector('.quest-list');
-    list.innerHTML = '';
+    list.innerHTML = '';// wipes old
     quests.forEach(q => {
         const card = document.createElement('div');
         card.className = 'quest-card';
@@ -86,7 +128,7 @@ function renderParent(quests) {
     if (aiBtn) aiBtn.onclick = aiSuggest;
 }
 
-/* Child UI */
+// child ui
 function renderChild(quests) {
     const list = document.querySelector('.quest-list');
     list.innerHTML = '';
