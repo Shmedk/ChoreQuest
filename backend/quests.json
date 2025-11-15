@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "id": "q_6918ff976e82b5.58330176",
+        "title": "Laundry Legend",
+        "description": "Fold and put away all clean clothes.",
+        "reward": "20 minutes screen time",
+        "status": "pendingApproval",
+        "createdAt": 1763245975,
+        "completedAt": 1763245990,
+        "approvedAt": null,
+        "assignedTo": "child",
+        "notes": ""
+    },
+    {
+        "id": "q_6918ff97729a13.57885773",
+        "title": "Tidy the play area",
+        "description": "Pick up toys and put them in their boxes.",
+        "reward": "1 gold star",
+        "status": "active",
+        "createdAt": 1763245975,
+        "completedAt": null,
+        "approvedAt": null,
+        "assignedTo": "child",
+        "notes": ""
+    }
+]
