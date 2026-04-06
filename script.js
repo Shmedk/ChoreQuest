@@ -1,13 +1,12 @@
 const API_BASE = './backend';
 // this is basically me being lazy. now i only type "backend" once instead of 23131435124523413513242134 times.
-// truly peak programmer efficiency right here.
+// tbh i should've just written it in the api function i just wrote more than i needed truly peak programmer efficiency right here.
 
 
 // tiny wrapper around fetch() so i don't lose my sanity , spoiler i still lost it
 async function api(path, method = 'GET', body = null) {
     const opts = { method, headers: {} };
     // this "opts" object tells fetch what to do
-    // fetch( url , options ) — this is the "options"
 
     if (body) {
         // if we have a body, we are POSTing something
@@ -82,11 +81,7 @@ function renderIndexStats(quests) {
 function escapeHtml(str = '') {
     if (!str) return '';
     return str.replace(/[&<>"']/g, (m) => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
+
     })[m]);
 }
 
