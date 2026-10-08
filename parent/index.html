@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parent Home</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <script>
+    const API_BASE_OVERRIDE = '../backend';
+    const AUTH_BACKEND_OVERRIDE = '../backend';
+  </script>
+
+  <script src="../shared/auth.js"></script>
+  <script>
+    CQ_AUTH.enforceRole(['parent'], '../index.html');
+  </script>
+  <script src="../index.js" defer></script>
+</head>
+<body data-page="parent-home">
+
+<header class="header">
+  <h1>ChoreQuest</h1>
+
+  <nav>
+    <a href="./index.html">Home</a>
+    <a href="./dashboard.html">Quest Dashboard</a>
+    <a href="../child/index.html" class="debug-only">Preview Child View</a>
+  </nav>
+  <div class="actions debug-only">
+    <select id="preview-child-select">
+      <option value="">Preview Child View</option>
+    </select>
+  </div>
+  <span id="debug-badge" class="debug"></span>
+</header>
+
+<main class="container">
+
+  <section class="section">
+    <h2>Pending Devices</h2>
+    <div id="pending-list"></div>
+  </section>
+
+  <section class="section debug-only">
+    <h2>Developer Tools</h2>
+    <div class="actions">
+      <button class="secondary" onclick="createDummyKids()">
+        Create Dummy Kids
+      </button>
+    </div>
+  </section>
+
+  <section class="section debug-only" ID="swap-tools">
+    <h2>Swap Child Devices</h2>
+    <div class="card">
+      <input id="swap-a" placeholder="Device ID A" />
+      <input id="swap-b" placeholder="Device ID B" />
+      <button id="swap-btn">Swap</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div id="stats"></div>
+</footer>
+
+</body>
+</html>

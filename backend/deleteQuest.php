@@ -1,36 +1,17 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-$input = json_decode(file_get_contents('php://input'), true);
-if (!$input || !isset($input['id'])) { echo json_encode(['error'=>'Invalid input']); exit; }
+require_once __DIR__ . '/utils.php';
 
-$file = __DIR__ . '/quests.json';
-$fp = fopen($file, 'c+');
-if (!$fp) { echo json_encode(['error'=>'Could not open file']); exit; }
+$deviceId = get_device_id();
+require_parent($deviceId);
 
-flock($fp, LOCK_EX);
-$contents = stream_get_contents($fp);
-$quests = $contents ? json_decode($contents, true) : [];
-if (!is_array($quests)) $quests = [];
+$body = read_body_json();
+$qid = $body["id"] ?? "";
+if (!$qid) json_out(["ok"=>false, "error"=>"missing id"], 400);
 
-$new = [];
-$found = false;
-foreach ($quests as $q) {
-    if ($q['id'] === $input['id']) { $found = true; continue; }
-    $new[] = $q;
-}
+$quests = get_quests();
+$before = count($quests);
 
-if (!$found) {
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    echo json_encode(['error'=>'Quest not found']);
-    exit;
-}
+$quests = array_values(array_filter($quests, fn($q) => ($q["id"] ?? "") !== $qid));
 
-ftruncate($fp, 0);
-rewind($fp);
-fwrite($fp, json_encode($new, JSON_PRETTY_PRINT));
-fflush($fp);
-flock($fp, LOCK_UN);
-fclose($fp);
-
-echo json_encode(['success'=>true, 'quests'=>$new]);
+save_quests($quests);
+json_out(["ok"=>true, "deleted" => ($before !== count($quests))]);

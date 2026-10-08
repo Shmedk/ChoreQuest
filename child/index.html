@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Quests</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <script>
+    const API_BASE_OVERRIDE = '../backend';
+    const AUTH_BACKEND_OVERRIDE = '../backend';
+  </script>
+
+  <script src="../shared/auth.js"></script>
+  <script>
+    CQ_AUTH.enforceRole(['child'], '../index.html');
+  </script>
+  <script src="../index.js" defer></script>
+</head>
+<body data-page="child">
+
+<header class="header">
+  <h1 id="child-name-title">My Quests</h1>
+</header>
+
+<main class="container">
+  <section class="section">
+    <div class="quest-list"></div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div id="stats"></div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parent Dashboard</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <script>
+    const API_BASE_OVERRIDE = '../backend';
+    const AUTH_BACKEND_OVERRIDE = '../backend';
+  </script>
+
+  <script src="../shared/auth.js"></script>
+  <script>
+    // parent only. if you're a child reading this, nice try.
+    CQ_AUTH.enforceRole(['parent'], '../index.html');
+  </script>
+  <script src="../index.js" defer></script>
+</head>
+<body data-page="parent-dashboard">
+
+  <header class="header">
+    <h1>ChoreQuest</h1>
+
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./dashboard.html">Quest Dashboard</a>
+      <a href="../child/index.html" class="debug-only">Preview Child View</a>
+    </nav>
+    <div class="actions debug-only">
+      <select id="preview-child-select">
+        <option value="">Preview Child View</option>
+      </select>
+    </div>
+
+    <span id="debug-badge" class="debug"></span>
+  </header>
+
+  <main class="container">
+
+    <section class="section">
+      <h2>Add Quest</h2>
+
+      <form id="quest-form" class="card form-grid">
+        <input id="q-title" placeholder="Quest title" required />
+        <input id="q-desc" placeholder="Description" />
+        <input id="q-reward" placeholder="Reward" />
+        <select id="child-select"></select>
+
+        <div class="actions">
+          <button type="submit">Add Quest</button>
+          <button type="button" id="aiSuggest" class="secondary">✨ AI Suggest</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="section">
+      <h2>Quests</h2>
+      <div class="quest-list"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div id="stats"></div>
+  </footer>
+
+  <div id="fatal" class="error"></div>
+
+</body>
+</html>

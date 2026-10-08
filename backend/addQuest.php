@@ -1,44 +1,39 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/utils.php';
 
-$input = json_decode(file_get_contents('php://input'), true);
-if (!$input || !isset($input['title'])) {// is it emty is it a jason
-    echo json_encode(['error' => 'Invalid input']);
-    exit;
+$deviceId = get_device_id();
+require_parent($deviceId);
+
+$body = read_body_json();
+$title = trim($body["title"] ?? "");
+$description = trim($body["description"] ?? "");
+$reward = trim($body["reward"] ?? "");
+$childId = trim($body["childId"] ?? ""); // parent chooses which child
+
+if (!$title || !$childId) {
+    json_out(["ok"=>false, "error"=>"missing title/childId"], 400);
 }
 
-$file = __DIR__ . '/quests.json';
-$fp = fopen($file, 'c+'); // read write or create
-if (!$fp) {
-    echo json_encode(['error' => 'Could not open file']);
-    exit;
+$children = get_children();
+if (!isset($children[$childId])) {
+    json_out(["ok"=>false, "error"=>"invalid childId"], 400);
 }
 
-flock($fp, LOCK_EX);
-$contents = stream_get_contents($fp);
-$quests = $contents ? json_decode($contents, true) : [];
-if (!is_array($quests)) $quests = [];
-// array of keys and val
-$new = [
-    'id' => uniqid('q_', true), //id with q_ prefix True is just more random
-    'title' => strip_tags($input['title']),// strip tags for safety
-    'description' => strip_tags($input['description'] ?? ''),// strip tags for safety
-    'reward' => strip_tags($input['reward'] ?? ''),// strip tags for safety
-    'status' => 'active', // active | pendingApproval | approved
-    'createdAt' => time(),// current time
-    'completedAt' => null,
-    'approvedAt' => null,
-    'assignedTo' => $input['assignedTo'] ?? 'child',
-    'notes' => $input['notes'] ?? ''
+$quests = get_quests();
+
+$id = "q_" . substr(md5($title . microtime(true)), 0, 10);
+
+$quests[] = [
+    "id" => $id,
+    "childId" => $childId,
+    "title" => $title,
+    "description" => $description,
+    "reward" => $reward,
+    "status" => "active",
+    "createdAt" => now_ts(),
+    "completedAt" => null,
+    "approvedAt" => null
 ];
 
-$quests[] = $new;
-
-ftruncate($fp, 0); // removes old file
-rewind($fp); //return to beginning
-fwrite($fp, json_encode($quests, JSON_PRETTY_PRINT));// turns $quests from php  into Json and writes fp into it
-fflush($fp);// empties the buffer into the file just to be sure
-flock($fp, LOCK_UN);//release the lock from line 17
-fclose($fp);// close the file
-
-echo json_encode(['success' => true, 'quests' => $quests]);
+save_quests($quests);
+json_out(["ok"=>true, "id"=>$id]);

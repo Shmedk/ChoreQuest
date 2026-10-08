@@ -1,15 +1,17 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/utils.php';
 
-$file = __DIR__ . '/quests.json';
-if (!file_exists($file)) {
-    file_put_contents($file, json_encode([]));
+$deviceId = get_device_id();
+$quests = get_quests();
+
+if (is_parent($deviceId)) {
+    json_out($quests);
 }
 
-$data = file_get_contents($file);
-if ($data === false) {
-    echo json_encode(['error' => 'Could not read quests file']);
-    exit;
+$childId = child_id_for_device($deviceId);
+if ($childId) {
+    $filtered = array_values(array_filter($quests, fn($q) => ($q["childId"] ?? "") === $childId));
+    json_out($filtered);
 }
 
-echo $data;
+json_out([]); // unregistered gets nothing

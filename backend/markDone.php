@@ -1,40 +1,28 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-$input = json_decode(file_get_contents('php://input'), true);
-if (!$input || !isset($input['id'])) { echo json_encode(['error'=>'Invalid input']); exit; }
+require_once __DIR__ . '/utils.php';
 
-$file = __DIR__ . '/quests.json';
-$fp = fopen($file, 'c+');
-if (!$fp) { echo json_encode(['error'=>'Could not open file']); exit; }
+$deviceId = get_device_id();
+$childId = child_id_for_device($deviceId);
 
-flock($fp, LOCK_EX);
-$contents = stream_get_contents($fp);
-$quests = $contents ? json_decode($contents, true) : [];
-if (!is_array($quests)) $quests = [];
+if (!$childId) json_out(["ok"=>false, "error"=>"forbidden (child only)"], 403);
 
-$found = false;
+$body = read_body_json();
+$qid = $body["id"] ?? "";
+if (!$qid) json_out(["ok"=>false, "error"=>"missing id"], 400);
+
+$quests = get_quests();
+$changed = false;
+
 foreach ($quests as &$q) {
-    if ($q['id'] === $input['id']) {
-        $q['status'] = 'pendingApproval';
-        $q['completedAt'] = time();
-        $found = true;
+    if (($q["id"] ?? "") === $qid && ($q["childId"] ?? "") === $childId) {
+        if (($q["status"] ?? "") === "active") {
+            $q["status"] = "pendingApproval";
+            $q["completedAt"] = now_ts();
+            $changed = true;
+        }
         break;
     }
 }
-unset($q);
 
-if (!$found) {
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    echo json_encode(['error'=>'Quest not found']);
-    exit;
-}
-
-ftruncate($fp, 0);
-rewind($fp);
-fwrite($fp, json_encode($quests, JSON_PRETTY_PRINT));
-fflush($fp);
-flock($fp, LOCK_UN);
-fclose($fp);
-
-echo json_encode(['success'=>true, 'quests'=>$quests]);
+if ($changed) save_quests($quests);
+json_out(["ok"=>true, "changed"=>$changed]);

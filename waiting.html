@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Waiting for Approval</title>
+  <link rel="stylesheet" href="./style.css" />
+
+  <script>
+    const API_BASE_OVERRIDE = './backend';
+    const AUTH_BACKEND_OVERRIDE = './backend';
+  </script>
+
+  <script src="./shared/auth.js"></script>
+  <script>
+    // only unregistered devices allowed here
+    CQ_AUTH.enforceRole(['unregistered'], './index.html');
+  </script>
+  <script src="./index.js" defer></script>
+</head>
+<body data-page="waiting">
+
+<header class="header">
+  <h1>Waiting for Approval</h1>
+</header>
+
+<main class="container">
+  <section class="card">
+    <label>
+      Your name:
+      <input id="wait-name" type="text" />
+    </label>
+
+    <div class="actions">
+      <button id="wait-send">Send request</button>
+    </div>
+
+    <p id="wait-status" class="muted"></p>
+  </section>
+</main>
+
+</body>
+</html>
